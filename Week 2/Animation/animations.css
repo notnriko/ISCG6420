@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #f8f9fa;
+}
+
+button {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.box {
+    background: #3b6d4e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 120px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+/* Animation Keyframes */
+@keyframes rotateTL {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-15deg); }
+}
+
+@keyframes rotateCenter {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes rotateX {
+    0%, 100% { transform: rotateX(0deg); }
+    50% { transform: rotateX(180deg); }
+}
+
+@keyframes translateLR {
+    0%, 100% { transform: translateX(0px); }
+    50% { transform: translateX(20px); }
+}
+
+@keyframes translateUD {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(20px); }
+}
+
+@keyframes translatePath {
+    0%, 100% { transform: translate(0px, 0px); }
+    50% { transform: translate(20px, 20px); }
+}
+
+@keyframes skewLR {
+    0%, 100% { transform: skewX(0deg); }
+    50% { transform: skewX(20deg); }
+}
+
+@keyframes skewUD {
+    0%, 100% { transform: skewY(0deg); }
+    50% { transform: skewY(20deg); }
+}
+
+@keyframes scaleStretch {
+    0%, 100% { transform: scale(1,1); }
+    50% { transform: scale(1.2, 0.8); }
+}
+
+/* Apply animations when the class "animate" is active */
+.animate .rotate-tl { animation: rotateTL 2s infinite alternate ease-in-out; }
+.animate .rotate-center { animation: rotateCenter 3s infinite linear; }
+.animate .rotate-x { animation: rotateX 2s infinite alternate ease-in-out; }
+.animate .translate-lr { animation: translateLR 2s infinite alternate ease-in-out; }
+.animate .translate-ud { animation: translateUD 2s infinite alternate ease-in-out; }
+.animate .translate-path { animation: translatePath 2s infinite alternate ease-in-out; }
+.animate .skew-lr { animation: skewLR 2s infinite alternate ease-in-out; }
+.animate .skew-ud { animation: skewUD 2s infinite alternate ease-in-out; }
+.animate .scale-stretch { animation: scaleStretch 2s infinite alternate ease-in-out; }
