@@ -1,0 +1,17 @@
+.row {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 10px;
+}
+
+.column {
+    background-color: #aaa;
+    text-align: center;
+    font-size: 30px;
+    height: 1000px;
+}
+
+.column.middle {
+    grid-column-start: 2;
+    grid-column-end: 5;
+}

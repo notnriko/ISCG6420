@@ -1,0 +1,24 @@
+body {
+    margin: 5px;
+}
+
+.row {
+    display: flex;
+    align-items: stretch;
+}
+
+.column {
+    background-color: #aaa;
+    text-align: center;
+    margin: 5px;
+    font-size: 30px;
+    height: 1000px;
+}
+
+.column.middle {
+    flex-grow: 5;
+}
+
+.column.outer {
+    flex-grow: 1;
+}

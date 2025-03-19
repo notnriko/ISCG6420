@@ -1,0 +1,34 @@
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 5px;
+}
+
+.row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.column {
+    float: left;
+    background-color: #aaa;
+    text-align: center;
+    font-size: 30px;
+    height: 1000px;
+    border: #fff solid 5px;
+}
+
+.column.middle {
+    width: 60%;
+}
+
+.column.outer {
+    width: 20%;
+}
