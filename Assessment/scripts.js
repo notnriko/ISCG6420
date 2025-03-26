@@ -1,6 +1,4 @@
-// ========================
 // Part 2: Sidebar Advertisement
-// ========================
 let sidebarAdState = 0;
 let sidebarInterval;
 
@@ -83,7 +81,7 @@ function hexToRgb(hex) {
     } : null;
 }
 
-// Initialize sidebar animation
+// Initialise the sidebar animation
 window.addEventListener('DOMContentLoaded', () => {
     // Start the sidebar animation
     sidebarInterval = setInterval(() => {
@@ -97,9 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.replay-btn').addEventListener('click', replaySidebarAd);
 });
 
-// ========================
 // Part 3: Ticket Booking System
-// ========================
 let currentStep = 1;
 const formData = {};
 
@@ -156,7 +152,7 @@ function submitBooking() {
     document.getElementById('booking-summary').style.display = 'block';
 }
 
-// Initialize booking system
+// Initialise the booking system
 document.addEventListener('DOMContentLoaded', () => {
     // Navigation buttons
     document.querySelectorAll('.next-btn').forEach(btn => {
