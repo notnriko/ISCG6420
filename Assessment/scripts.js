@@ -1,6 +1,4 @@
-// ========================
 // Part 2: Sidebar Advertisement
-// ========================
 let sidebarAnimationTimeout;
 
 // Reset all animation elements to initial state
@@ -87,9 +85,7 @@ function runSidebarAnimation() {
     }, 3000);
 }
 
-// ========================
 // Part 3: Booking System
-// ========================
 let currentStep = 1;
 const formData = {};
 
@@ -177,9 +173,9 @@ function prevStep() {
     }
 }
 
-// Initialize everything when DOM loads
+// Initialise everything when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize sidebar animation
+    // Initialise sidebar animation
     runSidebarAnimation();
     
     // Set up replay button
