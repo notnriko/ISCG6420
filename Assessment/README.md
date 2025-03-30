@@ -16,11 +16,22 @@ This project is an interactive and animated promotional website for **Parakai Sp
 
 ---
 
-## 📁 File Structure
+## 📁 Project Structure
 
-. ├── index.html ├── styles.css ├── scripts.js ├── assets/ │ ├── crowded-queue.jpg │ ├── waterslide.jpg │ ├── nz-scenery.jpg │ ├── luxury-resort.jpg │ ├── logo.png │ ├── banner_storyboard.pdf │ ├── sidebar_storyboard.pdf │ └── wireframe_storyboard.pdf
-
-
+```bash
+Assessment
+├── index.html
+├── styles.css 
+├── scripts.js 
+├── assets/
+    ├── crowded-queue.jpg
+    ├── waterslide.jpg
+    ├── nz-scenery.jpg
+    ├── luxury-resort.jpg
+    ├── banner_storyboard.pdf
+    ├── sidebar_storyboard.pdf
+    └── wireframe_storyboard.pdf
+```
 ---
 
 ## ✅ Features
@@ -65,19 +76,6 @@ This project is an interactive and animated promotional website for **Parakai Sp
 
 ---
 
-## 📋 Assessment Criteria Checklist
-
-| Criteria                                       | Status |
-|-----------------------------------------------|--------|
-| Banner: 2 scenes, animation, link, student ID  | ✅     |
-| Sidebar: 2 scenes, JS animation, replay, ID    | ✅     |
-| Form: 4 steps, validation, summary             | ✅     |
-| PDF Storyboards linked                         | ✅     |
-| Code clean, responsive layout & accessible     | ✅     |
-| Smooth UX and visual polish                    | ✅     |
-
----
-
 ## 🧪 How to Run
 
 1. Open `index.html` in any modern browser (Chrome, Firefox, Edge)
@@ -89,6 +87,7 @@ This project is an interactive and animated promotional website for **Parakai Sp
 ## 🙌 Acknowledgements
 
 - Assets and brand concept based on [Parakai Springs](https://www.parakaisprings.co.nz/)
+- Images are from [Unsplash](https://unsplash.com)
 - Assessment design from ISCG6420 Web Development
 
 ---
