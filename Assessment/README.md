@@ -23,7 +23,7 @@ Assessment
 ├── index.html
 ├── styles.css 
 ├── scripts.js 
-├── assets/
+└── assets/
     ├── crowded-queue.jpg
     ├── waterslide.jpg
     ├── nz-scenery.jpg
