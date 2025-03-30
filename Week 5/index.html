@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Form</title>
+    <link rel="stylesheet" href="./form-pages.css">
+</head>
+<body>
+    <section>
+        <h2 class="underline">Form Pages</h2>
+        <div class="container-half card">
+            <subtitle class="card-title">Input Forms</subtitle>
+            <progress value="10" max="100"></progress>
+            <div id="form-page1" class="form-page" style="display: block">
+            <div> <!-- Page Title -->
+                <h3>Personal Details</h3>
+            </div>
+            <div> <!-- Page Input Fields -->
+                <label for="firstName" class="row">
+                    First Name:
+                    <input type="text" id="name-first" />
+                </label>
+                <label for="lastName" class="row">
+                    Last Name:
+                    <input type="text" id="name-last" />
+                </label>
+            </div>
+            <div> <!-- Page Navigation Buttons -->
+                <button class="next" type="button" onclick="showPage(2)">
+                    Next Page
+                </button>
+            </div>
+            <div id="form-page2" class="form-page" style="display: none">
+                <div> <!--- Page Title --->
+                    <h3>Vehicle Details</h3>
+                </div>
+                <div> <!-- Page Input Fields -->
+                    <div> <!-- Radio Button Input -->
+                        <label for="vehicle-sedan">
+                            <input
+                                type="radio"
+                                id="vehicle-sedan"
+                                name="vehicle"
+                                value="sedan"
+                                checked="true"
+                                />
+                                Van
+                        </label>
+                        <label for="vehicle-suv">
+                            <input
+                                type="radio"
+                                id="vehicle-suv"
+                                name="vehicle"
+                                value="suv"
+                                />
+                                SUV
+                        </label>
+                    </div>
+                    <div> <!-- Select Box Input -->
+                        <label for="vehicle-make">
+                            Make:
+                            <select>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Mazda">Mazda</option>
+                                <option value="Honda">Honda</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div> <!-- Page Navigation Buttons -->
+                    <button class="next" type="button" onclick="showPage(3)">
+                        Next Page
+                    </button>
+                    <button class="previous" type="button" onclick="showPage(1)">
+                        Previous Page
+                    </button>
+                </div>
+            </div>
+            <div id="form-page3" class="form-page" style="display: none">
+                <div> <!--- Page Title --->
+                    <h3>Summary</h3>
+                </div>
+                <div> <!-- Page Input Fields -->
+                    <div class="row">
+                        Name: <span id="summary-name"></span>
+                    </div>
+                    <div class="row">
+                        Vehicle: <span id="summary-vehicle"></span>
+                </div>
+                <div> <!-- Page Navigation Buttons -->
+                    <button class="previous" type="button" onclick="showPage(2)">
+                        Previous Page
+                    </button>
+                    <button class="next" type="button" onclick="submitData()">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container-half card">
+            <subtitle class="card-title">Collected Data</subtitle>
+            <table id="collected-data">
+                <thead>
+                    <td>Name</td>
+                    <td>Vehicle</td>
+                </thead>
+            </table>
+        </div>
+        <script src="formPaging.js"></script>
+    </section>
+</body>
+</html>
