@@ -162,9 +162,7 @@ function prevStep() {
     }
 }
 
-// ========================
-// Initialize
-// ========================
+// Initialise
 document.addEventListener('DOMContentLoaded', () => {
     runSidebarAnimation();
     document.querySelector('.replay-btn').addEventListener('click', runSidebarAnimation);
