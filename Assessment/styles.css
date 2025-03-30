@@ -1,3 +1,15 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+    color: #333;
+}
+
 /* Banner Styles */
 .banner-ad {
     width: calc(100% - 320px);
@@ -6,6 +18,8 @@
     overflow: hidden;
     cursor: pointer;
     margin-right: 320px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-bottom: 5px solid #264653;
 }
 
 .banner-ad img {
@@ -20,6 +34,7 @@
     width: 100%;
     height: 100%;
     opacity: 0;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
 
 .scene1 {
@@ -45,39 +60,44 @@
 .ad-text {
     position: absolute;
     font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    padding: 10px 15px;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    border-radius: 6px;
+    font-size: 20px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
 }
 
 .text1 {
-    top: 30%;
+    top: 25%;
     left: 10%;
-    animation: 
-        text-color-change1 3s linear forwards,
-        text-scale1 3s linear forwards;
+    animation: text-color-change1 3s linear forwards, text-scale1 3s linear forwards;
 }
 
 .text2 {
-    bottom: 30%;
+    bottom: 25%;
     right: 10%;
-    animation: 
-        text-color-change2 3s 3s linear forwards,
-        text-scale2 3s 3s linear forwards;
+    animation: text-color-change2 3s 3s linear forwards, text-scale2 3s 3s linear forwards;
 }
 
 @keyframes text-color-change1 {
-    from { color: #FFD700; } to { color: #FF0000; }
+    from { color: #FFD700; }
+    to { color: #FF0000; }
 }
 
 @keyframes text-scale1 {
-    from { font-size: 24px; } to { font-size: 32px; }
+    from { font-size: 24px; }
+    to { font-size: 32px; }
 }
 
 @keyframes text-color-change2 {
-    from { color: #87CEEB; } to { color: #FFA500; }
+    from { color: #87CEEB; }
+    to { color: #FFA500; }
 }
 
 @keyframes text-scale2 {
-    from { font-size: 28px; } to { font-size: 24px; }
+    from { font-size: 28px; }
+    to { font-size: 24px; }
 }
 
 .student-info {
@@ -89,8 +109,13 @@
     opacity: 0;
     animation: show-info 1s 6s forwards;
     background: rgba(0,0,0,0.7);
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 5px;
+}
+
+@keyframes show-info {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Sidebar Styles */
@@ -101,6 +126,14 @@
     width: 300px;
     padding: 20px;
     z-index: 1000;
+    transition: height 0.4s ease;
+    min-height: 400px;
+    background: #ffffff;
+    box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #264653;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .sidebar-content {
@@ -120,7 +153,7 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: all 1s ease;
+    transition: all 1s ease-in-out;
 }
 
 .sidebar-scene img {
@@ -138,6 +171,7 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     text-align: center;
     color: white;
+    font-size: 22px;
 }
 
 .replay-btn {
@@ -145,16 +179,25 @@
     color: white;
     border: none;
     padding: 10px 20px;
-    margin-top: 20px;
+    margin-top: 15px;
     cursor: pointer;
     border-radius: 5px;
     align-self: center;
+    font-weight: bold;
+    transition: background 0.3s ease;
 }
 
-/* Booking System Styles */
+.replay-btn:hover {
+    background: #1f3d48;
+}
+
+/* ========== Booking System Styles ========== */
 .booking-system {
     margin-right: 340px;
-    padding: 30px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 .progress-indicator {
@@ -171,6 +214,8 @@
     background: #ddd;
     display: grid;
     place-items: center;
+    font-weight: bold;
+    color: #666;
 }
 
 .step.active {
@@ -186,18 +231,28 @@
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.4s ease-in-out;
 }
 
 .form-step.active {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.locker-option {
+    margin: 10px 0;
 }
 
 .form-navigation {
@@ -213,11 +268,29 @@ button {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #1f3d48;
 }
 
 #booking-summary {
     display: none;
-    line-height: 1.6;
+    line-height: 1.8;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+#booking-summary.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 #booking-summary span {
