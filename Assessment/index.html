@@ -1,121 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parakai Springs</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parakai Springs</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <!-- Banner Advertisement -->
-    <div class="banner-ad" onclick="window.open('https://www.parakaisprings.co.nz/', '_blank')">
-        <div class="scene scene1">
-            <img src="assets/crowded-queue.jpg" alt="Crowded Entrance">
-            <p class="ad-text text1">Skip the queue with FAST PASS!</p>
-        </div>
-        <div class="scene scene2">
-            <img src="assets/waterslide.jpg" alt="Water Slide">
-            <p class="ad-text text2">Exclusive discounts for food & drinks!</p>
-        </div>
-        <div class="student-info">Don Lorenzo | 1567699</div>
+
+  <!-- Banner Advertisement -->
+  <div class="banner-ad" onclick="window.open('https://www.parakaisprings.co.nz/', '_blank')">
+    <div class="scene scene1">
+      <img src="assets/crowded-queue.jpg" alt="Crowded Entrance" />
+      <p class="ad-text text1">Skip the Queue with FAST PASS!</p>
+    </div>
+    <div class="scene scene2">
+      <img src="assets/waterslide.jpg" alt="Water Slide" />
+      <p class="ad-text text2">Exclusive Discounts for Food & Drinks!</p>
+    </div>
+    <div class="student-info">Don Lorenzo | 1567699</div>
+  </div>
+
+  <!-- Sidebar Advertisement -->
+  <aside class="sidebar-ad">
+    <div class="sidebar-content" id="sidebar-animation">
+
+      <!-- Scene 1 -->
+      <div class="sidebar-scene scene1">
+        <img src="assets/nz-scenery.jpg" alt="NZ Scenery" />
+        <p class="sidebar-text">Discover More Adventures</p>
+      </div>
+
+      <!-- Scene 2 -->
+      <div class="sidebar-scene scene3">
+        <img src="assets/hot-pools.jpg" alt="Hot Pools" />
+        <p class="sidebar-text">Relax in Our Soothing Hot Pools</p>
+      </div>
+
+      <!-- Scene 3 -->
+      <div class="sidebar-scene scene2">
+        <img src="assets/luxury-resort.jpg" alt="Luxury Resort" />
+        <p class="sidebar-text">Explore and Book Today</p>
+      </div>
     </div>
 
-    <!-- Sidebar Advertisement -->
-    <aside class="sidebar-ad">
-        <div class="sidebar-content">
-            <div id="sidebar-animation">
-                <div class="sidebar-scene scene1">
-                    <img src="assets/nz-scenery.jpg" alt="NZ Scenery">
-                    <p class="sidebar-text">Discover More Adventures</p>
-                </div>
-                <div class="sidebar-scene scene2">
-                    <img src="assets/luxury-resort.jpg" alt="Luxury Resort">
-                    <p class="sidebar-text">Explore and Book Today</p>
-                </div>
-            </div>
-            <button class="replay-btn">Replay Ad</button>
-            <div class="student-info">Don Lorenzo | 1567699</div>
-        </div>
-    </aside>
+    <button class="replay-btn">Replay Ad</button>
+    <div class="student-info">Don Lorenzo | 1567699</div>
+  </aside>
 
-    <!-- Main Content: Ticket Booking System -->
-    <main class="booking-system">
-        <div class="progress-indicator">
-            <span class="step active">1</span>
-            <span class="step">2</span>
-            <span class="step">3</span>
-            <span class="step">4</span>
-        </div>
-        
-        <!-- Step 1 -->
-        <div class="form-step active" data-step="1">
-            <h2>Select Date & Tickets</h2>
-            <input type="date" id="date" required>
-            <input type="number" id="adults" min="1" placeholder="Adults" required>
-            <input type="number" id="children" min="0" placeholder="Children" required>
-            <div class="form-navigation">
-                <button type="button" class="next-btn">Next →</button>
-            </div>
-        </div>
+  <!-- Booking System -->
+  <main class="booking-system">
+    <div class="progress-indicator">
+      <span class="step active">1</span>
+      <span class="step">2</span>
+      <span class="step">3</span>
+      <span class="step">4</span>
+    </div>
 
-        <!-- Step 2 -->
-        <div class="form-step" data-step="2">
-            <h2>Contact Information</h2>
-            <input type="text" id="name" placeholder="Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <div class="form-navigation">
-                <button type="button" class="prev-btn">← Previous</button>
-                <button type="button" class="next-btn">Next →</button>
-            </div>
-        </div>
+    <!-- Step 1 -->
+    <div class="form-step active" data-step="1">
+      <h2>Select Date & Tickets</h2>
+      <input type="date" id="date" required />
+      <input type="number" id="adults" min="1" placeholder="Adults" required />
+      <input type="number" id="children" min="0" placeholder="Children" required />
+      <div class="form-navigation">
+        <button type="button" class="next-btn">Next →</button>
+      </div>
+    </div>
 
-        <!-- Step 3 -->
-        <div class="form-step" data-step="3">
-            <h2>Ticket Selection</h2>
-            <select id="ticket-type" required>
-                <option value="" disabled selected>Select Ticket Type</option>
-                <option value="general">General Admission</option>
-                <option value="fast-pass">Fast Pass</option>
-            </select>
-            <div class="locker-option">
-                <label>
-                    <input type="radio" name="locker" value="yes"> Yes, I want a storage locker
-                </label>
-                <label>
-                    <input type="radio" name="locker" value="no"> No, I don't need a storage locker
-                </label>
-            </div>
-            <div class="form-navigation">
-                <button type="button" class="prev-btn">← Previous</button>
-                <button type="button" class="next-btn">Next →</button>
-            </div>
-        </div>
+    <!-- Step 2 -->
+    <div class="form-step" data-step="2">
+      <h2>Contact Information</h2>
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <div class="form-navigation">
+        <button type="button" class="prev-btn">← Previous</button>
+        <button type="button" class="next-btn">Next →</button>
+      </div>
+    </div>
 
-        <!-- Step 4 -->
-        <div class="form-step" data-step="4">
-            <h2>Confirm Booking</h2>
-            <label>
-                <input type="checkbox" id="terms" required> I agree to the Terms & Conditions
-            </label>
-            <div class="form-navigation">
-                <button type="button" class="prev-btn">← Previous</button>
-                <button type="button" id="submit-btn">Submit</button>
-            </div>
-        </div>
+    <!-- Step 3 -->
+    <div class="form-step" data-step="3">
+      <h2>Ticket Selection</h2>
+      <select id="ticket-type" required>
+        <option value="" disabled selected>Select Ticket Type</option>
+        <option value="general">General Admission</option>
+        <option value="fast-pass">Fast Pass</option>
+      </select>
+      <div class="locker-option">
+        <label><input type="radio" name="locker" value="yes" /> Yes, I want a storage locker</label>
+        <label><input type="radio" name="locker" value="no" /> No, I don't need a storage locker</label>
+      </div>
+      <div class="form-navigation">
+        <button type="button" class="prev-btn">← Previous</button>
+        <button type="button" class="next-btn">Next →</button>
+      </div>
+    </div>
 
-        <!-- Booking Summary -->
-        <div id="booking-summary" class="form-step">
-            <h2>Booking Summary</h2>
-            <p><strong>Date:</strong> <span id="summary-date"></span></p>
-            <p><strong>Adults:</strong> <span id="summary-adults"></span></p>
-            <p><strong>Children:</strong> <span id="summary-children"></span></p>
-            <p><strong>Name:</strong> <span id="summary-name"></span></p>
-            <p><strong>Email:</strong> <span id="summary-email"></span></p>
-            <p><strong>Ticket Type:</strong> <span id="summary-ticket-type"></span></p>
-            <p><strong>Storage Locker:</strong> <span id="summary-locker"></span></p>
-        </div>
-    </main>
+    <!-- Step 4 -->
+    <div class="form-step" data-step="4">
+      <h2>Confirm Booking</h2>
+      <label><input type="checkbox" id="terms" required /> I agree to the Terms & Conditions</label>
+      <div class="form-navigation">
+        <button type="button" class="prev-btn">← Previous</button>
+        <button type="button" id="submit-btn">Submit</button>
+      </div>
+    </div>
 
-    <script src="scripts.js"></script>
+    <!-- Booking Summary -->
+    <div id="booking-summary" class="form-step">
+      <h2>Booking Summary</h2>
+      <p><strong>Date:</strong> <span id="summary-date"></span></p>
+      <p><strong>Adults:</strong> <span id="summary-adults"></span></p>
+      <p><strong>Children:</strong> <span id="summary-children"></span></p>
+      <p><strong>Name:</strong> <span id="summary-name"></span></p>
+      <p><strong>Email:</strong> <span id="summary-email"></span></p>
+      <p><strong>Ticket Type:</strong> <span id="summary-ticket-type"></span></p>
+      <p><strong>Storage Locker:</strong> <span id="summary-locker"></span></p>
+    </div>
+  </main>
+
+  <script src="scripts.js"></script>
 </body>
 </html>

@@ -72,7 +72,7 @@ Assessment
 
 - **HTML5** – semantic structure
 - **CSS3** – layout, styling, transitions & animations
-- **JavaScript (ES6)** – dynamic DOM manipulation & logic
+- **JavaScript** – dynamic DOM manipulation & logic
 
 ---
 
