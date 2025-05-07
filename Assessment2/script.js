@@ -1,499 +1,355 @@
-// Game Constants
+// === Constants ===
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
 const TOY_RADIUS = 30;
-const TOY_STAGE2_DURATION = 5000; // 5 seconds in ms
-const TOY_STAGE3_DURATION = 5000; // 5 seconds in ms
+const TOY_STAGE2_DURATION = 5000;
+const TOY_STAGE3_DURATION = 5000;
 
-// Game Variables
+// === Sprite Frame Info ===
+const frameWidth = 21;
+const frameHeight = 33;
+const frameCount = 9;
+let frameX = 0;
+let frameY = 0;
+let frameDelay = 5;
+let frameTicker = 0;
+
 let canvas, ctx;
+
+// === Game State ===
 let gameActive = false;
 let score = 0;
 let timeLeft = 0;
 let gameInterval;
 let toys = [];
 let lastToyTime = 0;
-let toyInterval = 2000; // New toy every 2 seconds
+let toyInterval = 2000;
 
-// Character Variables
+// === Character ===
+// character.x and y are now center-based
 let character = {
-    x: CANVAS_WIDTH / 2,
-    y: CANVAS_HEIGHT / 2,
-    width: 60,
-    height: 60,
-    speed: 5,
-    direction: 'right', // 'left', 'right', 'up', 'down'
-    isMoving: false
+  x: CANVAS_WIDTH / 2,
+  y: CANVAS_HEIGHT / 2,
+  width: frameWidth * 2,
+  height: frameHeight * 2,
+  speed: 5,
+  direction: 'down',
+  isMoving: false
 };
 
-// Key States
+// === Keys ===
 const keys = {
-    ArrowUp: false,
-    ArrowDown: false,
-    ArrowLeft: false,
-    ArrowRight: false,
-    w: false,
-    a: false,
-    s: false,
-    d: false,
-    ' ': false // spacebar
+  ArrowUp: false, ArrowDown: false,
+  ArrowLeft: false, ArrowRight: false,
+  w: false, a: false, s: false, d: false,
+  ' ': false
 };
 
-// Sound Effects
-const sounds = {
-    start: new Audio('assets/sounds/countdown.wav'),
-    collect: new Audio('assets/sounds/point.wav'),
-    fail: new Audio('assets/sounds/lose.flac'),
-    end: new Audio('assets/sounds/gameover.wav')
+// === Assets ===
+let sounds = {};
+let characterImg = new Image();
+let backgroundImg = new Image();
+
+const soundPaths = {
+  start: 'assets/sounds/countdown.wav',
+  collect: 'assets/sounds/point.wav',
+  fail: 'assets/sounds/lose.flac',
+  end: 'assets/sounds/gameover.wav'
 };
 
-// Global variables
-let assetsToLoad = 0;
+const imagePaths = {
+  character: 'assets/images/swimmer.png',
+  background: 'assets/images/water.jpg'
+};
+
+let assetsToLoad = 6;
 let assetsLoaded = 0;
-let characterImg, backgroundImg;
 
-// New improved asset loader
 function loadAssets() {
-    // List of all assets to load
-    const assets = [
-        { type: 'image', path: 'assets/images/swimmer.png', var: 'characterImg' },
-        { type: 'image', path: 'assets/images/water.jpg', var: 'backgroundImg' },
-        { type: 'audio', path: 'assets/sounds/countdown.wav', var: 'sounds.start' },
-        { type: 'audio', path: 'assets/sounds/point.wav', var: 'sounds.collect' },
-        { type: 'audio', path: 'assets/sounds/lose.flac', var: 'sounds.fail' },
-        { type: 'audio', path: 'assets/sounds/gameover.wav', var: 'sounds.end' }
-    ];
+  characterImg.onload = assetLoaded;
+  characterImg.src = imagePaths.character;
 
-    assetsToLoad = assets.length;
-    
-    assets.forEach(asset => {
-        if (asset.type === 'image') {
-            const img = new Image();
-            img.onload = () => assetLoaded();
-            img.onerror = () => assetError(asset.path);
-            img.src = asset.path;
-            window[asset.var] = img;
-        } else if (asset.type === 'audio') {
-            const audio = new Audio(asset.path);
-            audio.oncanplaythrough = () => assetLoaded();
-            audio.onerror = () => assetError(asset.path);
-            window[asset.var.split('.')[0]][asset.var.split('.')[1]] = audio;
-        }
-    });
+  backgroundImg.onload = assetLoaded;
+  backgroundImg.src = imagePaths.background;
+
+  for (let [key, path] of Object.entries(soundPaths)) {
+    const audio = new Audio(path);
+    audio.oncanplaythrough = assetLoaded;
+    sounds[key] = audio;
+  }
 }
 
 function assetLoaded() {
-    assetsLoaded++;
-    const progress = Math.floor((assetsLoaded / assetsToLoad) * 100);
-    document.getElementById('loading-progress').textContent = `${progress}%`;
-    
-    if (assetsLoaded === assetsToLoad) {
-        // All assets loaded
-        setTimeout(() => {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('game-content').classList.remove('hidden');
-            initGame();
-        }, 500);
-    }
+  assetsLoaded++;
+  document.getElementById('loading-progress').textContent = `${Math.floor((assetsLoaded / assetsToLoad) * 100)}%`;
+  if (assetsLoaded === assetsToLoad) {
+    setTimeout(() => {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('game-content').classList.remove('hidden');
+      initGame();
+    }, 500);
+  }
 }
 
-function assetError(path) {
-    console.error(`Failed to load asset: ${path}`);
-    assetLoaded(); // Continue anyway
-}
-
-function initGame() {
-    // Set initial volume
-    const volume = document.getElementById('volume').value;
-    Object.values(sounds).forEach(sound => {
-        sound.volume = volume;
-    });
-    
-    // Initialize game
-    drawInitialScreen();
-    
-    // Enable start button
-    document.getElementById('start-btn').disabled = false;
-}
-
-// Call this when the page loads
 window.addEventListener('DOMContentLoaded', () => {
-    loadAssets();
-});
-
-// Initialize the game when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Get canvas and context
-    canvas = document.getElementById('game-canvas');
-    ctx = canvas.getContext('2d');
-    
-    // Set up event listeners
-    setupEventListeners();
-    
-    // Preload assets
-    preloadAssets();
-    
-    // Draw initial screen
-    drawInitialScreen();
+  canvas = document.getElementById('game-canvas');
+  ctx = canvas.getContext('2d');
+  loadAssets();
+  setupEventListeners();
 });
 
 function setupEventListeners() {
-    // Keyboard controls
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-    
-    // Game controls
-    document.getElementById('start-btn').addEventListener('click', startGame);
-    document.getElementById('restart-btn').addEventListener('click', restartGame);
-    document.getElementById('play-again').addEventListener('click', restartGame);
-    
-    // Volume control
-    document.getElementById('volume').addEventListener('input', (e) => {
-        const volume = e.target.value;
-        Object.values(sounds).forEach(sound => {
-            sound.volume = volume;
-        });
-    });
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
+
+  document.getElementById('start-btn').addEventListener('click', startGame);
+  document.getElementById('restart-btn').addEventListener('click', restartGame);
+  document.getElementById('play-again').addEventListener('click', restartGame);
+
+  document.getElementById('volume').addEventListener('input', (e) => {
+    Object.values(sounds).forEach(sound => sound.volume = e.target.value);
+  });
 }
 
 function handleKeyDown(e) {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' '].includes(e.key)) {
-        keys[e.key] = true;
-        e.preventDefault();
-        
-        // Update character direction
-        if (e.key === 'ArrowRight' || e.key === 'd') character.direction = 'right';
-        if (e.key === 'ArrowLeft' || e.key === 'a') character.direction = 'left';
-        if (e.key === 'ArrowUp' || e.key === 'w') character.direction = 'up';
-        if (e.key === 'ArrowDown' || e.key === 's') character.direction = 'down';
-        
-        character.isMoving = true;
-    }
+  if (e.key in keys) {
+    keys[e.key] = true;
+    e.preventDefault();
+    if (['ArrowRight', 'd'].includes(e.key)) character.direction = 'right';
+    if (['ArrowLeft', 'a'].includes(e.key)) character.direction = 'left';
+    if (['ArrowUp', 'w'].includes(e.key)) character.direction = 'up';
+    if (['ArrowDown', 's'].includes(e.key)) character.direction = 'down';
+    character.isMoving = true;
+  }
 }
 
 function handleKeyUp(e) {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' '].includes(e.key)) {
-        keys[e.key] = false;
-        e.preventDefault();
-        
-        // Check if all movement keys are released
-        const movementKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'];
-        character.isMoving = movementKeys.some(key => keys[key]);
-    }
+  if (e.key in keys) {
+    keys[e.key] = false;
+    e.preventDefault();
+    character.isMoving = Object.keys(keys).some(k => keys[k]);
+  }
 }
 
-function preloadAssets() {
-    // In a real implementation, you would preload images and sounds here
-    // For this example, we'll just set the volume
-    Object.values(sounds).forEach(sound => {
-        sound.volume = document.getElementById('volume').value;
-    });
-}
-
-function drawInitialScreen() {
-    if (!assetsLoaded) return;
-    
-    // Clear canvas
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    
-    // Draw background if loaded
-    if (backgroundImg.complete) {
-        ctx.drawImage(backgroundImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    } else {
-        ctx.fillStyle = '#48cae4';
-        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    }
-    
-    // Draw initial message
-    ctx.fillStyle = 'white';
-    ctx.font = '20px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Press START to begin the game!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-}
-
-function drawCharacter() {
-    if (!assetsLoaded) return;
-    
-    ctx.save();
-    ctx.translate(character.x, character.y);
-    
-    // Flip character based on direction
-    if (character.direction === 'left') {
-        ctx.scale(-1, 1);
-        ctx.drawImage(characterImg, -character.width, -character.height/2, character.width, character.height);
-    } else {
-        ctx.drawImage(characterImg, 0, -character.height/2, character.width, character.height);
-    }
-    
-    ctx.restore();
+function initGame() {
+  Object.values(sounds).forEach(sound => sound.volume = document.getElementById('volume').value);
+  drawInitialScreen();
+  document.getElementById('start-btn').disabled = false;
 }
 
 function startGame() {
-    if (!assetsLoaded) {
-        console.warn("Assets not fully loaded yet!");
-        return;
-    }
-    
-    sounds.start.play();
-    
-    score = 0;
-    document.getElementById('score').textContent = score;
-    timeLeft = parseInt(document.getElementById('game-time').value);
-    updateTimerDisplay();
-    toys = [];
-    
-    document.getElementById('start-btn').disabled = true;
-    document.getElementById('restart-btn').disabled = false;
-    
-    gameActive = true;
-    lastToyTime = Date.now();
-    gameInterval = setInterval(gameLoop, 1000 / 60);
-    
-    // Hide instructions when game starts
-    document.querySelector('.instructions').classList.add('hidden');
+  sounds.start.play();
+  gameActive = true;
+  score = 0;
+  toys = [];
+  timeLeft = parseInt(document.getElementById('game-time').value);
+  document.getElementById('score').textContent = score;
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('restart-btn').disabled = false;
+  document.querySelector('.instructions').classList.add('hidden');
+  lastToyTime = Date.now();
+  updateTimerDisplay();
+  gameInterval = setInterval(gameLoop, 1000 / 60);
 }
 
 function restartGame() {
-    // Stop any running game
-    if (gameInterval) {
-        clearInterval(gameInterval);
-    }
-    
-    // Hide game over screen if visible
-    document.getElementById('game-over').classList.add('hidden');
-    
-    // Reset game state
-    gameActive = false;
-    
-    // Show instructions again
-    document.querySelector('.instructions').classList.remove('hidden');
-    
-    // Enable start button
-    document.getElementById('start-btn').disabled = false;
-    
-    // Redraw initial screen
-    drawInitialScreen();
-}
-
-function gameLoop() {
-    // Update game state
-    update();
-    
-    // Render game
-    render();
-}
-
-function update() {
-    // Update time
-    timeLeft -= 1/60; // Subtract 1/60 of a second (assuming 60 FPS)
-    if (timeLeft <= 0) {
-        endGame();
-        return;
-    }
-    
-    // Update timer display every second
-    if (Math.floor(timeLeft) !== Math.floor(timeLeft + 1/60)) {
-        updateTimerDisplay();
-    }
-    
-    // Move character based on key presses
-    if (keys.ArrowUp || keys.w) character.y = Math.max(0, character.y - character.speed);
-    if (keys.ArrowDown || keys.s) character.y = Math.min(CANVAS_HEIGHT - character.height, character.y + character.speed);
-    if (keys.ArrowLeft || keys.a) character.x = Math.max(0, character.x - character.speed);
-    if (keys.ArrowRight || keys.d) character.x = Math.min(CANVAS_WIDTH - character.width, character.x + character.speed);
-    
-    // Check for collection attempt
-    if (keys[' ']) {
-        attemptCollection();
-        keys[' '] = false; // Reset spacebar state
-    }
-    
-    // Spawn new toys periodically
-    const now = Date.now();
-    if (now - lastToyTime > toyInterval) {
-        spawnToy();
-        lastToyTime = now;
-    }
-    
-    // Update all toys
-    updateToys();
-}
-
-function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = Math.floor(timeLeft % 60);
-    document.getElementById('time').textContent = 
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function spawnToy() {
-    const toy = {
-        x: Math.random() * (CANVAS_WIDTH - 100) + 50, // Random x position (avoid edges)
-        y: 0, // Start at top
-        targetY: Math.random() * (CANVAS_HEIGHT * 0.6) + 50, // Random y position in upper 60% of canvas
-        radius: TOY_RADIUS,
-        color: getRandomBrightColor(),
-        stage: 1, // 1: falling, 2: floating, 3: sinking, 4: respawning
-        stageStartTime: Date.now(),
-        collected: false
-    };
-    
-    toys.push(toy);
-}
-
-function getRandomBrightColor() {
-    const hue = Math.floor(Math.random() * 360);
-    return `hsl(${hue}, 100%, 50%)`;
-}
-
-function updateToys() {
-    const now = Date.now();
-    
-    for (let i = toys.length - 1; i >= 0; i--) {
-        const toy = toys[i];
-        
-        switch (toy.stage) {
-            case 1: // Falling to target position
-                toy.y += 2; // Fall speed
-                if (toy.y >= toy.targetY) {
-                    toy.stage = 2;
-                    toy.stageStartTime = now;
-                }
-                break;
-                
-            case 2: // Floating
-                if (now - toy.stageStartTime > TOY_STAGE2_DURATION) {
-                    toy.stage = 3;
-                    toy.stageStartTime = now;
-                    toy.initialRadius = toy.radius;
-                }
-                break;
-                
-            case 3: // Sinking (shrinking and fading)
-                const stage3Progress = (now - toy.stageStartTime) / TOY_STAGE3_DURATION;
-                if (stage3Progress >= 1) {
-                    toy.stage = 4;
-                } else {
-                    // Shrink and fade
-                    toy.radius = toy.initialRadius * (1 - stage3Progress);
-                    toy.opacity = 1 - stage3Progress;
-                }
-                break;
-                
-            case 4: // Respawn
-                // Remove toy (it will be replaced by a new one)
-                toys.splice(i, 1);
-                break;
-        }
-    }
-}
-
-function attemptCollection() {
-    if (!gameActive) return;
-    
-    let collectedAny = false;
-    
-    for (const toy of toys) {
-        if (toy.stage !== 2 && toy.stage !== 3) continue; // Only collect during stages 2 and 3
-        
-        // Simple distance check for collection
-        const distance = Math.sqrt(
-            Math.pow(character.x - toy.x, 2) + 
-            Math.pow(character.y - toy.y, 2)
-        );
-        
-        if (distance < character.width / 2 + toy.radius) {
-            // Successful collection
-            if (toy.stage === 2) {
-                score += 2; // Bonus for collecting during floating stage
-            } else {
-                score += 1;
-            }
-            
-            toy.collected = true;
-            collectedAny = true;
-            
-            // Remove the toy immediately
-            const index = toys.indexOf(toy);
-            if (index !== -1) {
-                toys.splice(index, 1);
-            }
-        }
-    }
-    
-    if (collectedAny) {
-        sounds.collect.play();
-        document.getElementById('score').textContent = score;
-    } else {
-        sounds.fail.play();
-    }
-}
-
-function render() {
-    if (!assetsLoaded) return;
-    
-    // Draw background image (scaled to canvas)
-    ctx.drawImage(backgroundImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    
-    // Draw all toys
-    drawToys();
-    
-    // Draw character
-    drawCharacter();
-}
-
-function drawToys() {
-    for (const toy of toys) {
-        if (toy.stage === 4) continue; // Don't draw respawning toys
-        
-        ctx.save();
-        
-        if (toy.stage === 3) {
-            // Apply opacity for sinking stage
-            ctx.globalAlpha = toy.opacity || 1;
-        }
-        
-        // Create radial gradient for the toy (bonus feature)
-        const gradient = ctx.createRadialGradient(
-            toy.x, toy.y, 0,
-            toy.x, toy.y, toy.radius
-        );
-        gradient.addColorStop(0, 'white');
-        gradient.addColorStop(0.7, toy.color);
-        gradient.addColorStop(1, 'rgba(0,0,0,0.5)');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(toy.x, toy.y, toy.radius, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Add highlight for more realistic look
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.beginPath();
-        ctx.arc(
-            toy.x - toy.radius * 0.3, 
-            toy.y - toy.radius * 0.3, 
-            toy.radius * 0.2, 
-            0, 
-            Math.PI * 2
-        );
-        ctx.fill();
-        
-        ctx.restore();
-    }
+  clearInterval(gameInterval);
+  gameActive = false;
+  document.getElementById('game-over').classList.add('hidden');
+  document.querySelector('.instructions').classList.remove('hidden');
+  document.getElementById('start-btn').disabled = false;
+  drawInitialScreen();
 }
 
 function endGame() {
-    gameActive = false;
-    clearInterval(gameInterval);
-    
-    // Play end sound
-    sounds.end.play();
-    
-    // Show game over screen
-    document.getElementById('final-score').textContent = score;
-    document.getElementById('game-over').classList.remove('hidden');
-    
-    // Enable start button
-    document.getElementById('start-btn').disabled = false;
+  gameActive = false;
+  clearInterval(gameInterval);
+  sounds.end.play();
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('game-over').classList.remove('hidden');
+  document.getElementById('start-btn').disabled = false;
+}
+
+function gameLoop() {
+  update();
+  render();
+}
+
+function update() {
+  timeLeft -= 1 / 60;
+  if (timeLeft <= 0) {
+    endGame();
+    return;
+  }
+
+  if (Math.floor(timeLeft) !== Math.floor(timeLeft + 1 / 60)) updateTimerDisplay();
+
+  // Move character - now using center-based bounds
+  const halfW = character.width / 2;
+  const halfH = character.height / 2;
+
+  if (keys.ArrowUp || keys.w) character.y = Math.max(halfH, character.y - character.speed);
+  if (keys.ArrowDown || keys.s) character.y = Math.min(CANVAS_HEIGHT - halfH, character.y + character.speed);
+  if (keys.ArrowLeft || keys.a) character.x = Math.max(halfW, character.x - character.speed);
+  if (keys.ArrowRight || keys.d) character.x = Math.min(CANVAS_WIDTH - halfW, character.x + character.speed);
+
+  if (keys[' ']) {
+    attemptCollection();
+    keys[' '] = false;
+  }
+
+  if (Date.now() - lastToyTime > toyInterval) {
+    spawnToy();
+    lastToyTime = Date.now();
+  }
+
+  updateToys();
+
+  if (character.isMoving) {
+    frameTicker++;
+    if (frameTicker >= frameDelay) {
+      frameX = (frameX + 1) % frameCount;
+      frameTicker = 0;
+    }
+  } else {
+    frameX = 0;
+  }
+
+  if (character.direction === 'down') frameY = 0;
+  else if (character.direction === 'left') frameY = 1;
+  else if (character.direction === 'right') frameY = 2;
+  else if (character.direction === 'up') frameY = 3;
+}
+
+function render() {
+  ctx.drawImage(backgroundImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  drawToys();
+  drawCharacter();
+}
+
+function drawInitialScreen() {
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctx.drawImage(backgroundImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctx.fillStyle = 'white';
+  ctx.font = '24px Comic Sans MS';
+  ctx.fillText('Press START to begin the game!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = Math.floor(timeLeft % 60);
+  document.getElementById('time').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+// === Character ===
+function drawCharacter() {
+  ctx.drawImage(
+    characterImg,
+    frameX * frameWidth,
+    frameY * frameHeight,
+    frameWidth, frameHeight,
+    character.x - character.width / 2,
+    character.y - character.height / 2,
+    character.width,
+    character.height
+  );
+}
+
+// === Toys ===
+function spawnToy() {
+  const toy = {
+    x: Math.random() * (CANVAS_WIDTH - 100) + 50,
+    y: 0,
+    targetY: Math.random() * (CANVAS_HEIGHT * 0.6) + 50,
+    radius: TOY_RADIUS,
+    color: getRandomBrightColor(),
+    stage: 1,
+    stageStartTime: Date.now(),
+    collected: false
+  };
+  toys.push(toy);
+}
+
+function getRandomBrightColor() {
+  return `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
+}
+
+function updateToys() {
+  const now = Date.now();
+  for (let i = toys.length - 1; i >= 0; i--) {
+    let toy = toys[i];
+    switch (toy.stage) {
+      case 1:
+        toy.y += 2;
+        if (toy.y >= toy.targetY) {
+          toy.stage = 2;
+          toy.stageStartTime = now;
+        }
+        break;
+      case 2:
+        if (now - toy.stageStartTime > TOY_STAGE2_DURATION) {
+          toy.stage = 3;
+          toy.stageStartTime = now;
+          toy.initialRadius = toy.radius;
+        }
+        break;
+      case 3:
+        let progress = (now - toy.stageStartTime) / TOY_STAGE3_DURATION;
+        if (progress >= 1) toy.stage = 4;
+        else {
+          toy.radius = toy.initialRadius * (1 - progress);
+          toy.opacity = 1 - progress;
+        }
+        break;
+      case 4:
+        toys.splice(i, 1);
+        break;
+    }
+  }
+}
+
+function drawToys() {
+  for (let toy of toys) {
+    if (toy.stage === 4) continue;
+    ctx.save();
+    if (toy.stage === 3) ctx.globalAlpha = toy.opacity || 1;
+
+    const gradient = ctx.createRadialGradient(toy.x, toy.y, 0, toy.x, toy.y, toy.radius);
+    gradient.addColorStop(0, 'white');
+    gradient.addColorStop(0.7, toy.color);
+    gradient.addColorStop(1, 'rgba(0,0,0,0.5)');
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(toy.x, toy.y, toy.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// === Scoring ===
+function attemptCollection() {
+  let collected = false;
+  for (let i = toys.length - 1; i >= 0; i--) {
+    const toy = toys[i];
+    if (toy.stage !== 2 && toy.stage !== 3) continue;
+
+    const dx = character.x - toy.x;
+    const dy = character.y - toy.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const characterHitRadius = Math.max(character.width, character.height) * 0.4;
+    if (distance < characterHitRadius + toy.radius) {
+      score += toy.stage === 2 ? 2 : 1;
+      document.getElementById('score').textContent = score;
+      sounds.collect.play();
+      toys.splice(i, 1);
+      collected = true;
+      break;
+    }
+  }
+
+  if (!collected) {
+    sounds.fail.play();
+  }
 }
